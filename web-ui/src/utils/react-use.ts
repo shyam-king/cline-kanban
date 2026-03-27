@@ -6,6 +6,7 @@ import {
 	useInterval as useReactUseInterval,
 	useLocalStorage as useReactUseLocalStorage,
 	useMeasure as useReactUseMeasure,
+	useMedia as useReactUseMedia,
 	useTitle as useReactUseTitle,
 	useUnmount as useReactUseUnmount,
 } from "react-use";
@@ -108,4 +109,19 @@ export function useMeasure<T extends Element = Element>() {
 
 export function useUnmount(fn: () => void): void {
 	useReactUseUnmount(fn);
+}
+
+/** Mobile breakpoint (max-width: 768px) */
+export function useIsMobile(): boolean {
+	return useReactUseMedia("(max-width: 768px)", false);
+}
+
+/** Tablet breakpoint (max-width: 1024px) */
+export function useIsTablet(): boolean {
+	return useReactUseMedia("(max-width: 1024px)", false);
+}
+
+/** Custom media query hook */
+export function useMedia(query: string, defaultState?: boolean): boolean {
+	return useReactUseMedia(query, defaultState);
 }

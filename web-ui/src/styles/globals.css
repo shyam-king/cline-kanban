@@ -67,6 +67,39 @@ body,
 	padding: 8px;
 }
 
+/* Mobile: horizontal scroll with snap for full-width columns */
+@media (max-width: 768px) {
+	.kb-board {
+		flex-direction: row;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+		scroll-snap-type: x mandatory;
+		padding: 8px 4px;
+		gap: 4px;
+	}
+
+	.kb-board > section {
+		flex: 0 0 calc(100vw - 16px);
+		min-width: calc(100vw - 16px);
+		max-width: calc(100vw - 16px);
+		scroll-snap-align: center;
+	}
+
+	/* Larger column header on mobile for better touch targets */
+	.kb-board > section > div:first-child {
+		height: 48px !important;
+		padding: 0 16px !important;
+	}
+
+	/* Add scroll indicators - dots at bottom */
+	.kb-board::after {
+		content: "";
+		display: block;
+		flex: 0 0 4px;
+	}
+}
+
 .kb-dependency-surface {
 	position: relative;
 }
@@ -763,5 +796,123 @@ body.kb-dependency-link-mode {
 
 .kb-markdown > * + * {
 	margin-top: 0.5em;
+}
+
+/* ===== Mobile Responsive Styles ===== */
+
+/* Mobile navigation overlay */
+.kb-mobile-sidebar-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 40;
+	background: rgba(0, 0, 0, 0.5);
+	animation: kb-overlay-show 150ms ease;
+}
+
+.kb-mobile-sidebar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	z-index: 50;
+	width: min(300px, 85vw);
+	background: var(--color-surface-1);
+	animation: kb-mobile-sidebar-show 200ms ease;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+@keyframes kb-mobile-sidebar-show {
+	from {
+		transform: translateX(-100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
+
+/* Mobile top bar adjustments */
+@media (max-width: 768px) {
+	.kb-topbar-content {
+		gap: 4px;
+		padding: 0 8px;
+	}
+
+	.kb-topbar-path {
+		display: none;
+	}
+
+	.kb-topbar-git-stats {
+		display: none;
+	}
+
+	.kb-topbar-actions {
+		gap: 2px;
+	}
+}
+
+/* Touch-friendly tap targets */
+@media (max-width: 768px) {
+	.kb-board-card-shell {
+		min-height: 44px;
+	}
+
+	.kb-project-row {
+		min-height: 48px;
+	}
+
+	/* Hide keyboard shortcuts on mobile - not relevant */
+	.kb-shortcuts-card {
+		display: none;
+	}
+}
+
+/* Scrollbar hide on mobile for cleaner look */
+@media (max-width: 768px) {
+	.kb-board::-webkit-scrollbar {
+		display: none;
+	}
+
+	.kb-board {
+		scrollbar-width: none;
+	}
+}
+
+/* Detail view on mobile: stack panels vertically */
+@media (max-width: 768px) {
+	.kb-detail-main-row {
+		flex-direction: column !important;
+	}
+
+	.kb-detail-agent-panel {
+		width: 100% !important;
+		height: 50% !important;
+		min-height: 200px;
+		border-right: none !important;
+		border-bottom: 1px solid var(--color-divider) !important;
+	}
+
+	.kb-detail-workspace-panel {
+		width: 100% !important;
+		height: 50% !important;
+		flex: 1 1 auto !important;
+	}
+
+	.kb-detail-resize-handle {
+		display: none !important;
+	}
+
+	/* Hide column context panel on mobile detail view */
+	.kb-column-context-panel {
+		display: none !important;
+	}
+}
+
+/* Tablet: narrower column context panel */
+@media (max-width: 1024px) and (min-width: 769px) {
+	.kb-column-context-panel {
+		width: 15% !important;
+		min-width: 140px !important;
+	}
 }
 
