@@ -4,6 +4,7 @@
 import { FolderOpen } from "lucide-react";
 import type { ReactElement } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useIsMobile } from "@/utils/react-use";
 
 import { notifyError, showAppToast } from "@/components/app-toaster";
 import { CardDetailView } from "@/components/card-detail-view";
@@ -87,6 +88,8 @@ export default function App(): ReactElement {
 	const [isClearTrashDialogOpen, setIsClearTrashDialogOpen] = useState(false);
 	const [isGitHistoryOpen, setIsGitHistoryOpen] = useState(false);
 	const [pendingTaskStartAfterEditId, setPendingTaskStartAfterEditId] = useState<string | null>(null);
+	const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+	const isMobile = useIsMobile();
 	const taskEditorResetRef = useRef<() => void>(() => {});
 	const lastStreamErrorRef = useRef<string | null>(null);
 	const handleProjectSwitchStart = useCallback(() => {
@@ -749,24 +752,48 @@ export default function App(): ReactElement {
 
 	return (
 		<div className="flex h-[100svh] min-w-0 overflow-hidden">
-			{!selectedCard ? (
-				<ProjectNavigationPanel
-					projects={displayedProjects}
-					isLoadingProjects={isProjectListLoading}
-					currentProjectId={navigationCurrentProjectId}
-					removingProjectId={removingProjectId}
-					activeSection={homeSidebarSection}
-					onActiveSectionChange={setHomeSidebarSection}
-					canShowAgentSection={!hasNoProjects && Boolean(currentProjectId)}
-					agentSectionContent={homeSidebarAgentPanel}
-					onSelectProject={(projectId) => {
-						void handleSelectProject(projectId);
+			{/* Mobile sidebar overlay */}
+			{isMobile && isMobileSidebarOpen && !selectedCard && (
+				<div
+					className="kb-mobile-sidebar-overlay"
+					onClick={() => setIsMobileSidebarOpen(false)}
+					onKeyDown={(e) => {
+						if (e.key === "Escape") {
+							setIsMobileSidebarOpen(false);
+						}
 					}}
-					onRemoveProject={handleRemoveProject}
-					onAddProject={() => {
-						void handleAddProject();
-					}}
+					role="button"
+					tabIndex={0}
+					aria-label="Close sidebar"
 				/>
+			)}
+			{/* Sidebar - hidden on mobile unless toggled */}
+			{!selectedCard && (!isMobile || isMobileSidebarOpen) ? (
+				<div className={isMobile ? "kb-mobile-sidebar" : undefined}>
+					<ProjectNavigationPanel
+						projects={displayedProjects}
+						isLoadingProjects={isProjectListLoading}
+						currentProjectId={navigationCurrentProjectId}
+						removingProjectId={removingProjectId}
+						activeSection={homeSidebarSection}
+						onActiveSectionChange={setHomeSidebarSection}
+						canShowAgentSection={!hasNoProjects && Boolean(currentProjectId)}
+						agentSectionContent={homeSidebarAgentPanel}
+						onSelectProject={(projectId) => {
+							void handleSelectProject(projectId);
+							if (isMobile) {
+								setIsMobileSidebarOpen(false);
+							}
+						}}
+						onRemoveProject={handleRemoveProject}
+						onAddProject={() => {
+							void handleAddProject();
+							if (isMobile) {
+								setIsMobileSidebarOpen(false);
+							}
+						}}
+					/>
+				</div>
 			) : null}
 			<div className="flex flex-col flex-1 min-w-0 overflow-hidden">
 				<TopBar
@@ -823,6 +850,8 @@ export default function App(): ReactElement {
 					onToggleGitHistory={hasNoProjects ? undefined : handleToggleGitHistory}
 					isGitHistoryOpen={isGitHistoryOpen}
 					hideProjectDependentActions={shouldHideProjectDependentTopBarActions}
+					showMobileMenuButton={isMobile && !selectedCard}
+					onToggleMobileSidebar={() => setIsMobileSidebarOpen(true)}
 				/>
 				<div className="relative flex flex-1 min-h-0 min-w-0 overflow-hidden">
 					<div

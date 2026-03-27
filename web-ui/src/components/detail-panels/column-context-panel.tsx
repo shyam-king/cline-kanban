@@ -306,6 +306,7 @@ export function ColumnContextPanel({
 
 	return (
 		<div
+			className="kb-column-context-panel"
 			style={{
 				display: "flex",
 				flexDirection: "column",

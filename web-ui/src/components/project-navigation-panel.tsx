@@ -363,7 +363,7 @@ function ShortcutsCard(): React.ReactElement {
 	const [expanded, setExpanded] = useState(false);
 
 	return (
-		<div style={{ padding: "8px 12px" }}>
+		<div className="kb-shortcuts-card" style={{ padding: "8px 12px" }}>
 			<div style={{ padding: "0 8px" }}>
 				<div className="flex flex-col gap-0.5">
 					{ESSENTIAL_SHORTCUTS.map((s) => (

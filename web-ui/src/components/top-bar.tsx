@@ -9,6 +9,7 @@ import {
 	CircleArrowDown,
 	Command,
 	GitBranch,
+	Menu,
 	Play,
 	Plus,
 	Settings,
@@ -310,6 +311,8 @@ export function TopBar({
 	canOpenWorkspace,
 	isOpeningWorkspace,
 	hideProjectDependentActions = false,
+	onToggleMobileSidebar,
+	showMobileMenuButton = false,
 }: {
 	onBack?: () => void;
 	workspacePath?: string;
@@ -344,6 +347,8 @@ export function TopBar({
 	canOpenWorkspace: boolean;
 	isOpeningWorkspace: boolean;
 	hideProjectDependentActions?: boolean;
+	onToggleMobileSidebar?: () => void;
+	showMobileMenuButton?: boolean;
 }): React.ReactElement {
 	const displayWorkspacePath = workspacePath ? formatPathForDisplay(workspacePath) : null;
 	const workspaceSegments = displayWorkspacePath ? getWorkspacePathSegments(displayWorkspacePath) : [];
@@ -398,7 +403,7 @@ export function TopBar({
 			<nav
 			className="flex flex-nowrap items-center h-10 min-h-[40px] min-w-0 bg-surface-1"
 			style={{
-				paddingLeft: onBack ? 6 : 12,
+				paddingLeft: onBack || showMobileMenuButton ? 6 : 12,
 				paddingRight: 8,
 				borderBottom: "1px solid var(--color-divider)",
 			}}
@@ -406,6 +411,18 @@ export function TopBar({
 			<div
 				className="flex flex-nowrap items-center h-10 flex-1 min-w-0 overflow-hidden gap-1.5"
 			>
+				{showMobileMenuButton && onToggleMobileSidebar ? (
+					<div className="flex items-center shrink-0 overflow-visible">
+						<Button
+							variant="ghost"
+							size="sm"
+							icon={<Menu size={18} />}
+							onClick={onToggleMobileSidebar}
+							aria-label="Open menu"
+							className="mr-1 shrink-0"
+						/>
+					</div>
+				) : null}
 				{onBack ? (
 					<div className="flex items-center shrink-0 overflow-visible">
 						<Button

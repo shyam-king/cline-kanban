@@ -569,8 +569,9 @@ export function CardDetailView({
 					<div style={{ display: "flex", flex: "1 1 0", minHeight: 0, overflow: "hidden" }}>{gitHistoryPanel}</div>
 				) : (
 					<>
-						<div ref={mainRowRef} style={{ display: "flex", flex: "1 1 0", minHeight: 0, overflow: "hidden" }}>
+						<div ref={mainRowRef} className="kb-detail-main-row" style={{ display: "flex", flex: "1 1 0", minHeight: 0, overflow: "hidden" }}>
 							<div
+								className="kb-detail-agent-panel"
 								style={{ display: isDiffExpanded ? "none" : "flex", width: agentPanelPercent, minWidth: 0, minHeight: 0 }}
 							>
 									{showClineAgentChatPanel ? (
@@ -644,6 +645,7 @@ export function CardDetailView({
 									role="separator"
 									aria-orientation="vertical"
 									aria-label="Resize agent and diff panels"
+									className="kb-detail-resize-handle"
 									style={{
 										position: "relative",
 										flex: "0 0 1px",
